@@ -12,7 +12,7 @@ proxyHandler.handler = (req, res) => {
 
 proxyHandler.callProxy = async (req, callback) => {
   const response = await global.fetch(
-    process.env.ROOT_DOMAIN,
+    process.env.ROOT_DOMAIN + req.url,
     requestParser(req),
   )
 
