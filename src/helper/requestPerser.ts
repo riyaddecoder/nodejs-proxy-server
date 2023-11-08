@@ -1,6 +1,6 @@
 import * as http from 'http'
 
-export const requestParser = (req: http.IncomingMessage) => {
+export const requestParser = async (req: http.IncomingMessage) => {
   const requestBody: RequestInit = {
     method: req.method,
     headers: {
@@ -11,7 +11,12 @@ export const requestParser = (req: http.IncomingMessage) => {
   }
 
   if (req.method !== 'GET') {
-    requestBody.body = JSON.stringify({})
+    const bodyChunks: Uint8Array[] = []
+    for await (const chunk of req) {
+      bodyChunks.push(chunk)
+    }
+    const requestBodyBuffer = Buffer.concat(bodyChunks)
+    requestBody.body = requestBodyBuffer.toString('utf8') || '{}'
   }
 
   return requestBody
