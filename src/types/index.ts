@@ -7,5 +7,8 @@ export type ServerHandlerType = (
 
 export type proxyHandlerType = {
   handler?: ServerHandlerType
-  callProxy?: (callback: (statusCode: number, data?: string) => void) => void
+  callProxy?: (
+    request: http.IncomingMessage,
+    callback: (statusCode: number, data?: string) => void,
+  ) => void
 }
