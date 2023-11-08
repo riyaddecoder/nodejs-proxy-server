@@ -11,16 +11,21 @@ proxyHandler.handler = (req, res) => {
 }
 
 proxyHandler.callProxy = async (req, callback) => {
-  const response = await global.fetch(
-    process.env.ROOT_DOMAIN + req.url,
-    await requestParser(req),
-  )
+  try {
+    const response = await global.fetch(
+      process.env.ROOT_DOMAIN + req.url,
+      await requestParser(req),
+    )
 
-  if (response.ok) {
-    const responseData = await response.json()
-    callback(response.status, responseData)
-  } else {
-    callback(response.status, response.statusText)
+    if (response.ok) {
+      const responseData = await response.json()
+      callback(response.status, responseData)
+    } else {
+      callback(response.status, response.statusText)
+    }
+  } catch (error) {
+    console.error('Error while parsing response:', error)
+    callback(500, 'Internal Server Error')
   }
 }
 
