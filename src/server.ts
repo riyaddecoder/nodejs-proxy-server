@@ -24,9 +24,19 @@ serverService.startServer = (handler: ServerHandlerType) => {
     handler(req, res)
   })
 
-  server.listen(process.env.PORT, () => {
-    console.log(`Server started at port ${process.env.PORT}`)
-  })
+  if (process.env.PORT) {
+    server.listen(process.env.PORT, () => {
+      console.log(`Server started at port ${process.env.PORT}`)
+    })
+  } else {
+    // Listen on the default IP address if port is not available in .env
+    server.listen()
+
+    // Event listener for the 'listening' event
+    server.on('listening', () => {
+      console.log(`Server is listening...`)
+    })
+  }
 }
 
 export default serverService
